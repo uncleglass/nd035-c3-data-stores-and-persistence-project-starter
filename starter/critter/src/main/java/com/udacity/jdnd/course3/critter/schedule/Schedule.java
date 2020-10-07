@@ -6,7 +6,7 @@ import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -15,13 +15,26 @@ public class Schedule {
     @Id
     @GeneratedValue
     private Long id;
+
+    @ManyToMany
+    @JoinTable(
+            name = "schedule_employee",
+            joinColumns = {@JoinColumn(name = "schedule_id")},
+            inverseJoinColumns = {@JoinColumn(name = "employee_id")}
+    )
+    private Set<Employee> employees = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "schedule_pet",
+            joinColumns = {@JoinColumn(name = "schedule_id")},
+            inverseJoinColumns = {@JoinColumn(name = "pet_id")}
+    )
+    private Set<Pet> pets = new HashSet<>();
     private LocalDate date;
+
     @ElementCollection
     private Set<EmployeeSkill> activities;
-    @ManyToMany(mappedBy = "schedules")
-    private List<Employee> employees;
-    @ManyToMany(mappedBy = "schedules")
-    private List<Pet> pets;
 
     public Long getId() {
         return id;
@@ -47,19 +60,19 @@ public class Schedule {
         this.activities = activities;
     }
 
-    public List<Employee> getEmployees() {
+    public Set<Employee> getEmployees() {
         return employees;
     }
 
-    public void setEmployees(List<Employee> employees) {
+    public void setEmployees(Set<Employee> employees) {
         this.employees = employees;
     }
 
-    public List<Pet> getPets() {
+    public Set<Pet> getPets() {
         return pets;
     }
 
-    public void setPets(List<Pet> pets) {
+    public void setPets(Set<Pet> pets) {
         this.pets = pets;
     }
 }

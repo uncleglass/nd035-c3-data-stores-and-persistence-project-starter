@@ -5,7 +5,8 @@ import com.udacity.jdnd.course3.critter.user.Customer;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Pet {
@@ -16,10 +17,13 @@ public class Pet {
     private String name;
     private LocalDate birthDate;
     private String notes;
+
     @ManyToOne
+    @JoinColumn(name = "owner_id")
     private Customer owner;
-    @ManyToMany
-    private List<Schedule> schedules;
+
+    @ManyToMany(mappedBy = "pets")
+    private Set<Schedule> schedules = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -69,11 +73,11 @@ public class Pet {
         this.owner = owner;
     }
 
-    public List<Schedule> getSchedules() {
+    public Set<Schedule> getSchedules() {
         return schedules;
     }
 
-    public void setSchedules(List<Schedule> schedules) {
+    public void setSchedules(Set<Schedule> schedules) {
         this.schedules = schedules;
     }
 }

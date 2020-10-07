@@ -4,26 +4,30 @@ import com.udacity.jdnd.course3.critter.schedule.Schedule;
 
 import javax.persistence.*;
 import java.time.DayOfWeek;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 public class Employee {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     private String name;
+
     @ElementCollection
     private Set<EmployeeSkill> skills;
+
     @ElementCollection
     private Set<DayOfWeek> daysAvailable;
-    @ManyToMany
-    private List<Schedule> schedules;
-    public long getId() {
+
+    @ManyToMany(mappedBy = "employees")
+    private Set<Schedule> schedules = new HashSet<>();
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -51,11 +55,11 @@ public class Employee {
         this.daysAvailable = daysAvailable;
     }
 
-    public List<Schedule> getSchedules() {
+    public Set<Schedule> getSchedules() {
         return schedules;
     }
 
-    public void setSchedules(List<Schedule> schedules) {
+    public void setSchedules(Set<Schedule> schedules) {
         this.schedules = schedules;
     }
 }
