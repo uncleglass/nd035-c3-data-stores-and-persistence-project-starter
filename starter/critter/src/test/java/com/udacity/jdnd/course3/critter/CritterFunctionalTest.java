@@ -26,7 +26,7 @@ import java.util.stream.IntStream;
  * Students will need to configure the application to run these tests by adding application.properties file
  * to the test/resources directory that specifies the datasource. It can run using an in-memory H2 instance
  * and should not try to re-use the same datasource used by the rest of the app.
- *
+ * <p>
  * These tests should all pass once the project is complete.
  */
 @Transactional
@@ -41,6 +41,17 @@ public class CritterFunctionalTest {
 
     @Autowired
     private ScheduleController scheduleController;
+
+    @Test
+    public void testCreatePet() {
+        PetDTO petDTO = createPetDTO();
+        PetDTO newPet = petController.savePet(petDTO);
+        PetDTO retrievedPet = petController.getPet(newPet.getId());
+        Assertions.assertEquals(petDTO.getBirthDate(), newPet.getBirthDate());
+        Assertions.assertEquals(petDTO.getType(), newPet.getType());
+        Assertions.assertEquals(petDTO.getName(), newPet.getName());
+        Assertions.assertTrue(retrievedPet.getId() > 0);
+    }
 
     @Test
     public void testCreateCustomer(){
@@ -80,7 +91,6 @@ public class CritterFunctionalTest {
         List<PetDTO> pets = petController.getPetsByOwner(newCustomer.getId());
         Assertions.assertEquals(newPet.getId(), pets.get(0).getId());
         Assertions.assertEquals(newPet.getName(), pets.get(0).getName());
-
         //check to make sure customer now also contains pet
         CustomerDTO retrievedCustomer = userController.getAllCustomers().get(0);
         Assertions.assertTrue(retrievedCustomer.getPetIds() != null && retrievedCustomer.getPetIds().size() > 0);
@@ -240,7 +250,6 @@ public class CritterFunctionalTest {
         compareSchedules(sched3, scheds2c.get(1));
     }
 
-
     private static EmployeeDTO createEmployeeDTO() {
         EmployeeDTO employeeDTO = new EmployeeDTO();
         employeeDTO.setName("TestEmployee");
@@ -301,5 +310,4 @@ public class CritterFunctionalTest {
         Assertions.assertEquals(sched1.getEmployeeIds(), sched2.getEmployeeIds());
         Assertions.assertEquals(sched1.getDate(), sched2.getDate());
     }
-
 }
